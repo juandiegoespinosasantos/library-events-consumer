@@ -1,7 +1,9 @@
 package com.learnkafka.events.consumer;
 
+import com.learnkafka.events.consumer.services.ILibraryEventsService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
@@ -14,8 +16,21 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class LibraryEventsConsumer {
 
+    private final ILibraryEventsService service;
+
+    @Autowired
+    public LibraryEventsConsumer(ILibraryEventsService service) {
+        this.service = service;
+    }
+
     @KafkaListener(topics = {"library-events"})
-    public void onMessage(ConsumerRecord<Integer, String> consumerRecord) {
+    public void onMessage(final ConsumerRecord<Integer, String> consumerRecord) {
         log.info("ConsumerRecord: {}", consumerRecord);
+
+        try {
+            service.process(consumerRecord);
+        } catch (IllegalAccessException ex) {
+            log.error(ex.getMessage());
+        }
     }
 }
