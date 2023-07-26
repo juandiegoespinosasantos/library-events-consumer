@@ -1,18 +1,11 @@
 package com.learnkafka.events.consumer.model.entities;
 
 import com.learnkafka.events.consumer.enums.ELibraryEventTypes;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -39,7 +32,6 @@ public class LibraryEvent implements Serializable {
     @Enumerated(EnumType.STRING)
     private ELibraryEventTypes type;
 
-    @OneToOne(mappedBy = "libraryEvent", cascade = {CascadeType.ALL})
-    @ToString.Exclude
+    @OneToOne(mappedBy = "libraryEvent", cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     private Book book;
 }

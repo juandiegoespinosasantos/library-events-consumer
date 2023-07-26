@@ -24,7 +24,8 @@ public class LibraryEventsService implements ILibraryEventsService {
 
     @Autowired
     public LibraryEventsService(LibraryEventsRepository repository, Gson gson) {
-        this.repository = repository; this.gson = gson;
+        this.repository = repository;
+        this.gson = gson;
     }
 
     @Override
@@ -33,19 +34,22 @@ public class LibraryEventsService implements ILibraryEventsService {
         log.info("libraryEvent: {}", libraryEvent);
 
         switch (libraryEvent.getType()) {
-            case NEW:
+            case NEW -> {
                 return save(libraryEvent);
-            case UPDATE:
-                validate(libraryEvent); return save(libraryEvent);
-            default:
-                log.error("Invalid Library Event Type");
+            }
+            case UPDATE -> {
+                validate(libraryEvent);
+                return save(libraryEvent);
+            }
+            default -> log.error("Invalid Library Event Type");
         }
 
         return null;
     }
 
     private LibraryEvent save(LibraryEvent libraryEvent) {
-        libraryEvent.getBook().setLibraryEvent(libraryEvent); log.info("Saved!");
+        libraryEvent.getBook().setLibraryEvent(libraryEvent);
+        log.info("Saved!");
 
         return repository.save(libraryEvent);
     }
